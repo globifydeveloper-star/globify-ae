@@ -1,9 +1,16 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback, lazy, Suspense } from "react";
+import {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, ChevronRight } from "lucide-react";
-import Link from 'next/link';
+import Link from "next/link";
 
 import { useContactDialog } from "@/contexts/ContactDialogContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -14,7 +21,9 @@ const StarfieldLayer = lazy(() => import("./hero-globe/StarfieldLayer"));
 const ParticleTrails = lazy(() => import("./hero-globe/ParticleTrails"));
 
 import dynamic from "next/dynamic";
-const GlobeScene = dynamic(() => import("./hero-globe/GlobeScene"), { ssr: false });
+const GlobeScene = dynamic(() => import("./hero-globe/GlobeScene"), {
+  ssr: false,
+});
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -32,7 +41,10 @@ const DraggableMoon = ({ isMobile }: { isMobile: boolean }) => {
       const parent = moonRef.current.parentElement;
       if (parent) {
         const rect = parent.getBoundingClientRect();
-        const initial = { x: rect.width - size - rect.width * 0.08, y: rect.height * 0.08 };
+        const initial = {
+          x: rect.width - size - rect.width * 0.08,
+          y: rect.height * 0.08,
+        };
         posRef.current = initial;
         moonRef.current.style.left = `${initial.x}px`;
         moonRef.current.style.top = `${initial.y}px`;
@@ -60,18 +72,20 @@ const DraggableMoon = ({ isMobile }: { isMobile: boolean }) => {
     const onUp = (e: PointerEvent) => {
       draggingRef.current = false;
       if (moonRef.current) {
-        try { moonRef.current.releasePointerCapture(e.pointerId); } catch {}
+        try {
+          moonRef.current.releasePointerCapture(e.pointerId);
+        } catch {}
       }
     };
 
-    window.addEventListener('pointermove', onMove, { passive: false });
-    window.addEventListener('pointerup', onUp);
-    window.addEventListener('pointercancel', onUp);
+    window.addEventListener("pointermove", onMove, { passive: false });
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
 
     return () => {
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
@@ -80,7 +94,10 @@ const DraggableMoon = ({ isMobile }: { isMobile: boolean }) => {
     e.preventDefault();
     e.stopPropagation();
     draggingRef.current = true;
-    offsetRef.current = { x: e.clientX - posRef.current.x, y: e.clientY - posRef.current.y };
+    offsetRef.current = {
+      x: e.clientX - posRef.current.x,
+      y: e.clientY - posRef.current.y,
+    };
     moonRef.current?.setPointerCapture(e.pointerId);
   }, []);
 
@@ -92,9 +109,9 @@ const DraggableMoon = ({ isMobile }: { isMobile: boolean }) => {
         width: size,
         height: size,
         opacity: initialized ? 1 : 0,
-        touchAction: 'none',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
+        touchAction: "none",
+        userSelect: "none",
+        WebkitUserSelect: "none",
       }}
       onPointerDown={onPointerDown}
     >
@@ -104,11 +121,12 @@ const DraggableMoon = ({ isMobile }: { isMobile: boolean }) => {
         draggable={false}
         className="w-full h-full object-cover"
         style={{
-          borderRadius: '50%',
-          filter: 'brightness(1.2) contrast(1.1)',
-          boxShadow: '0 0 20px 5px rgba(200,210,230,0.15), 0 0 40px 12px rgba(180,200,220,0.06)',
-          clipPath: 'circle(47%)',
-          pointerEvents: 'none',
+          borderRadius: "50%",
+          filter: "brightness(1.2) contrast(1.1)",
+          boxShadow:
+            "0 0 20px 5px rgba(200,210,230,0.15), 0 0 40px 12px rgba(180,200,220,0.06)",
+          clipPath: "circle(47%)",
+          pointerEvents: "none",
         }}
       />
     </div>
@@ -134,7 +152,8 @@ const HeroSection = () => {
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    const handler = (e: MediaQueryListEvent) =>
+      setPrefersReducedMotion(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
@@ -148,7 +167,7 @@ const HeroSection = () => {
       const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
       mouseTarget.current = { x, y };
     },
-    [prefersReducedMotion, isMobile]
+    [prefersReducedMotion, isMobile],
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -160,15 +179,21 @@ const HeroSection = () => {
     if (prefersReducedMotion || isMobile) return;
     const tick = () => {
       const lerp = 0.1;
-      currentParallax.current.x += (mouseTarget.current.x - currentParallax.current.x) * lerp;
-      currentParallax.current.y += (mouseTarget.current.y - currentParallax.current.y) * lerp;
+      currentParallax.current.x +=
+        (mouseTarget.current.x - currentParallax.current.x) * lerp;
+      currentParallax.current.y +=
+        (mouseTarget.current.y - currentParallax.current.y) * lerp;
       const cx = currentParallax.current.x;
       const cy = currentParallax.current.y;
 
-      if (starfieldRef.current) starfieldRef.current.style.transform = `translate(${cx * 3}px, ${cy * 3}px)`;
-      if (nebulaRef.current) nebulaRef.current.style.transform = `translate(${cx * 6}px, ${cy * 6}px)`;
-      if (hudRef.current) hudRef.current.style.transform = `translate(${cx * 10}px, ${cy * 10}px)`;
-      if (globeWrapRef.current) globeWrapRef.current.style.transform = `translate(${cx * 16}px, ${cy * 16}px)`;
+      if (starfieldRef.current)
+        starfieldRef.current.style.transform = `translate(${cx * 3}px, ${cy * 3}px)`;
+      if (nebulaRef.current)
+        nebulaRef.current.style.transform = `translate(${cx * 6}px, ${cy * 6}px)`;
+      if (hudRef.current)
+        hudRef.current.style.transform = `translate(${cx * 10}px, ${cy * 10}px)`;
+      if (globeWrapRef.current)
+        globeWrapRef.current.style.transform = `translate(${cx * 16}px, ${cy * 16}px)`;
 
       animFrame.current = requestAnimationFrame(tick);
     };
@@ -182,20 +207,31 @@ const HeroSection = () => {
 
   // Headline words for stagger animation
   const line1Words = "360° Digital Commerce &".split(" ");
-  const line2Words = "Technology Partner for Scalable Growth".split(" ");
-
+  const line2Words = [
+    "Technology",
+    "Partner",
+    "for",
+    "Scalable Growth", // 👈 keep as one string
+  ];
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[85vh] min-h-[85dvh] md:min-h-[100vh] md:min-h-[100dvh] flex flex-col justify-center overflow-hidden"
+      className="relative min-h-[85dvh] md:min-h-[100dvh] flex flex-col justify-center overflow-hidden"
       style={{ background: "hsl(var(--hero-bg))" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {/* ── Layer 1: Starfield (skip on mobile) ── */}
       {!isMobile && (
-        <div ref={starfieldRef} className="absolute inset-0 will-change-transform z-[5]">
-          {!prefersReducedMotion && <Suspense fallback={null}><StarfieldLayer /></Suspense>}
+        <div
+          ref={starfieldRef}
+          className="absolute inset-0 will-change-transform z-[5]"
+        >
+          {!prefersReducedMotion && (
+            <Suspense fallback={null}>
+              <StarfieldLayer />
+            </Suspense>
+          )}
         </div>
       )}
 
@@ -207,7 +243,11 @@ const HeroSection = () => {
       {/* ── Layer 2.5: Particle Trails (skip on mobile) ── */}
       {!isMobile && (
         <div className="absolute inset-0 z-[1]">
-          {!prefersReducedMotion && <Suspense fallback={null}><ParticleTrails /></Suspense>}
+          {!prefersReducedMotion && (
+            <Suspense fallback={null}>
+              <ParticleTrails />
+            </Suspense>
+          )}
         </div>
       )}
 
@@ -220,14 +260,18 @@ const HeroSection = () => {
       <DraggableMoon isMobile={isMobile} />
 
       {/* ── Globe, large, centered background element ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 2 }}>
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ zIndex: 2 }}
+      >
         {/* Removed external glow div to prevent smudge */}
 
         {/* Horizontal lens flare */}
         <motion.div
           className="absolute w-full h-[2px]"
           style={{
-            background: "linear-gradient(90deg, transparent 15%, hsl(25 70% 50% / 0.3) 40%, hsl(25 80% 70% / 0.6) 50%, hsl(25 70% 50% / 0.3) 60%, transparent 85%)",
+            background:
+              "linear-gradient(90deg, transparent 15%, hsl(25 70% 50% / 0.3) 40%, hsl(25 80% 70% / 0.6) 50%, hsl(25 70% 50% / 0.3) 60%, transparent 85%)",
             filter: "blur(1px)",
           }}
           initial={{ opacity: 0, scaleX: 0 }}
@@ -238,7 +282,8 @@ const HeroSection = () => {
         <motion.div
           className="absolute w-full h-[20px]"
           style={{
-            background: "linear-gradient(90deg, transparent 20%, hsl(25 70% 50% / 0.06) 40%, hsl(25 80% 60% / 0.12) 50%, hsl(25 70% 50% / 0.06) 60%, transparent 80%)",
+            background:
+              "linear-gradient(90deg, transparent 20%, hsl(25 70% 50% / 0.06) 40%, hsl(25 80% 60% / 0.12) 50%, hsl(25 70% 50% / 0.06) 60%, transparent 80%)",
             filter: "blur(8px)",
           }}
           initial={{ opacity: 0 }}
@@ -315,7 +360,9 @@ const HeroSection = () => {
               {line2Words.map((word, i) => (
                 <motion.span
                   key={i}
-                  className="inline-block mr-[0.25em] text-shimmer"
+                  className={`inline-block mr-[0.25em] text-shimmer ${
+                    word === "Scalable Growth" ? "whitespace-nowrap" : ""
+                  }`}
                   initial={{ opacity: 0, y: 50, rotateX: -30 }}
                   animate={{ opacity: 1, y: 0, rotateX: 0 }}
                   transition={{
@@ -325,6 +372,7 @@ const HeroSection = () => {
                   }}
                 >
                   {word}
+                  {word !== "Scalable Growth" && "\u00A0"}
                 </motion.span>
               ))}
             </span>
@@ -337,8 +385,9 @@ const HeroSection = () => {
             transition={{ delay: 0.45, duration: 0.6, ease: easeOut }}
             className="mt-4 sm:mt-6 md:mt-8 text-sm sm:text-base md:text-xl text-hero-foreground/60 max-w-xl leading-relaxed font-light"
           >
-            We engineer AI-driven digital transformation, intelligent automation,
-            and revenue growth platforms for enterprises ready to lead, not follow.
+            We engineer AI-driven digital transformation, intelligent
+            automation, and revenue growth platforms for enterprises ready to
+            lead, not follow.
           </motion.p>
 
           {/* CTAs */}
@@ -348,7 +397,10 @@ const HeroSection = () => {
             transition={{ delay: 0.55, duration: 0.6, ease: easeOut }}
             className="mt-6 sm:mt-8 md:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4"
           >
-            <button onClick={openContactDialog} className="w-full sm:w-auto group">
+            <button
+              onClick={openContactDialog}
+              className="w-full sm:w-auto group"
+            >
               <motion.span
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -358,7 +410,10 @@ const HeroSection = () => {
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </motion.span>
             </button>
-            <Link href="/digital-transformation" className="w-full sm:w-auto group">
+            <Link
+              href="/digital-transformation"
+              className="w-full sm:w-auto group"
+            >
               <motion.span
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
