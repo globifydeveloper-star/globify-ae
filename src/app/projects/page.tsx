@@ -20,6 +20,7 @@ import portfolioBeflare from "@/assets/portfolio-beflare.jpg";
 import portfolioEkasysRetail from "@/assets/portfolio-ekasys-retail.jpg";
 import portfolioEkasysRE from "@/assets/portfolio-ekasys-realestate.jpg";
 import portfolioMedoc from "@/assets/portfolio-medoc.jpeg";
+import portfolioSalomon from "@/assets/portfolio-salomon.jpg";
 
 const categories = ["All", "E-Commerce", "Web App", "App Development", "Healthcare", "ERP"];
 
@@ -39,7 +40,7 @@ const projects = [
     slug: "salomon",
     category: "E-Commerce",
     description: "GCC distributor store for a world-leading outdoor sports brand — custom Shopify theme with Arabic RTL, multi-language, and multi-country localization.",
-    image: portfolioAmericanKoil.src,
+    image: portfolioSalomon.src,
     stats: { metric: "320%", label: "Revenue Growth" },
     tags: ["Shopify", "GCC", "E-Commerce", "Performance"],
     year: "2024",

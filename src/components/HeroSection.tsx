@@ -209,9 +209,7 @@ const HeroSection = () => {
   const line1Words = "360° Digital Commerce &".split(" ");
   const line2Words = [
     "Technology",
-    "Partner",
-    "for",
-    "Scalable Growth", // 👈 keep as one string
+    "Partner for Scalable Growth", //keep as one string
   ];
   return (
     <section
@@ -361,7 +359,9 @@ const HeroSection = () => {
                 <motion.span
                   key={i}
                   className={`inline-block mr-[0.25em] text-shimmer ${
-                    word === "Scalable Growth" ? "whitespace-nowrap" : ""
+                    word === "Partner for Scalable Growth"
+                      ? "whitespace-nowrap"
+                      : ""
                   }`}
                   initial={{ opacity: 0, y: 50, rotateX: -30 }}
                   animate={{ opacity: 1, y: 0, rotateX: 0 }}
@@ -372,7 +372,7 @@ const HeroSection = () => {
                   }}
                 >
                   {word}
-                  {word !== "Scalable Growth" && "\u00A0"}
+                  {word !== "Partner for Scalable Growth" && "\u00A0"}
                 </motion.span>
               ))}
             </span>

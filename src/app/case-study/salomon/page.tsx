@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import CaseStudyBreadcrumb from "@/components/CaseStudyBreadcrumb";
 import RelatedCaseStudies from "@/components/RelatedCaseStudies";
 import { useContactDialog } from "@/contexts/ContactDialogContext";
-import clientSalomon from "@/assets/clients/salomon.png";
+import clientSalomon from "@/assets/portfolio-salomon.jpg";
 
 const techStack = ["Shopify", "Custom Liquid Theme", "Multi-Language (EN/AR)", "RTL Support", "GCC Localization", "Country Switcher", "JavaScript", "CDN Optimization", "Performance Optimization"];
 
@@ -45,8 +45,8 @@ const CaseStudySalomon = () => {
                 ))}
               </div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="rounded-2xl overflow-hidden bg-card flex items-center justify-center p-12">
-              <img src={clientSalomon.src} alt="Salomon brand" className="w-full max-w-[280px] object-contain" />
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="rounded-2xl overflow-hidden">
+              <img src={clientSalomon.src} alt="Salomon brand" className="w-full h-[350px] object-cover rounded-2xl" />
             </motion.div>
           </div>
         </div>

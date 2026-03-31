@@ -12,7 +12,7 @@ import portfolioMedoc from "@/assets/portfolio-medoc.jpeg";
 import portfolioErp from "@/assets/portfolio-erp.jpg";
 import portfolioJudith from "@/assets/portfolio-judith-leiber.jpeg";
 import portfolioInstaRunway from "@/assets/portfolio-instarunway.jpeg";
-import clientSalomon from "@/assets/clients/salomon.png";
+import clientSalomon from "@/assets/portfolio-salomon.jpg";
 
 const allCaseStudies = [
   { slug: "wilson", title: "Wilson", category: "E-Commerce", image: portfolioWilson.src, stat: "500K+ Users" },
