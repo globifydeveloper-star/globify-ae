@@ -207,10 +207,7 @@ const HeroSection = () => {
 
   // Headline words for stagger animation
   const line1Words = "360° Digital Commerce &".split(" ");
-  const line2Words = [
-    "Technology",
-    "Partner for Scalable Growth", //keep as one string
-  ];
+  const line2Words = ["Technology", "Partner for", "Scalable Growth"];
   return (
     <section
       ref={sectionRef}
@@ -318,7 +315,7 @@ const HeroSection = () => {
           opacity: prefersReducedMotion ? 1 : contentOpacity,
         }}
       >
-        <div className="max-w-3xl pointer-events-auto">
+        <div className="  pointer-events-auto">
           {/* Tagline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -333,7 +330,7 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Headline, word-by-word stagger */}
-          <h1 className="text-[2.25rem] sm:text-5xl md:text-6xl lg:text-[5.5rem] font-extrabold text-hero-foreground leading-[1.08] tracking-[-0.03em]">
+          <h1 className="text-[1.8rem] sm:text-4xl md:text-6xl lg:text-[5rem] xl:text-[5.5rem] font-extrabold text-hero-foreground leading-[1.1] tracking-[-0.03em] max-w-[900px] md:max-w-[1200px] lg:max-w-[1600px]">
             {/* Line 1: "Transform. Automate.", white */}
             <span className="block">
               {line1Words.map((word, i) => (
@@ -354,27 +351,17 @@ const HeroSection = () => {
             </span>
 
             {/* Line 2: "Scale Without Limits.", orange gradient */}
-            <span className="block mt-2">
-              {line2Words.map((word, i) => (
-                <motion.span
-                  key={i}
-                  className={`inline-block mr-[0.25em] text-shimmer ${
-                    word === "Partner for Scalable Growth"
-                      ? "whitespace-nowrap"
-                      : ""
-                  }`}
-                  initial={{ opacity: 0, y: 50, rotateX: -30 }}
-                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  transition={{
-                    delay: 0.25 + i * 0.07,
-                    duration: 0.6,
-                    ease: easeOut,
-                  }}
-                >
-                  {word}
-                  {word !== "Partner for Scalable Growth" && "\u00A0"}
-                </motion.span>
-              ))}
+            <span className="block mt-2 text-shimmer">
+              {/* "Technology" on its own line for both Desktop and Mobile */}
+              <span className="block">Technology</span>
+
+              {/* Desktop: "Partner for Scalable Growth" stays on one line.
+      Mobile: "Partner for" and "Scalable Growth" split into two lines.
+  */}
+              <span className="block md:flex md:whitespace-nowrap md:gap-x-[0.25em]">
+                <span className="block md:inline">Partner for</span>
+                <span className="block md:inline">Scalable Growth</span>
+              </span>
             </span>
           </h1>
 
