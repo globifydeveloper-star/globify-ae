@@ -32,7 +32,9 @@ import {
   FileCheck,
   BarChart3,
   Lock,
+  Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -293,6 +295,29 @@ const faq = [
 const HireDevelopers = () => {
   const { openContactDialog } = useContactDialog();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formData = new FormData(e.currentTarget);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error("Failed to submit");
+      toast.success("Request Submitted!", {
+        description:
+          "We'll get back to you with developer profiles within 24 hours.",
+      });
+      (e.target as HTMLFormElement).reset();
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -682,29 +707,9 @@ const HireDevelopers = () => {
               </p>
             </div>
             <form
-              action="https://formsubmit.co/info@globify.in"
-              method="POST"
+              onSubmit={handleSubmit}
               className="bg-section-dark-foreground/[0.04] border border-section-dark-foreground/10 rounded-2xl p-8 space-y-5"
             >
-              <input
-                type="hidden"
-                name="_next"
-                ref={(node) => {
-                  if (node && typeof window !== "undefined")
-                    node.value = window.location.origin + "/thank-you";
-                }}
-              />
-              <input
-                type="hidden"
-                name="_autoresponse"
-                value="Thank you for reaching out to Globify. We have received your query and our team will get back to you within 24 hours."
-              />
-              <input type="hidden" name="_captcha" value="false" />
-              <input
-                type="hidden"
-                name="_subject"
-                value="New Lead: Hire Developers - globify.in"
-              />
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label
@@ -841,9 +846,18 @@ const HireDevelopers = () => {
               </div>
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                disabled={isSubmitting}
+                className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Get Developer Profiles <Send className="w-4 h-4" />
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
+                  </>
+                ) : (
+                  <>
+                    Get Developer Profiles <Send className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </form>
           </div>
