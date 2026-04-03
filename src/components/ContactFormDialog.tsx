@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ContactFormDialogProps {
   open: boolean;
@@ -54,11 +56,38 @@ const ContactFormDialog = ({
   onOpenChange,
   selectedPlan,
 }: ContactFormDialogProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleClose = (val: boolean) => {
     onOpenChange(val);
   };
 
   const detectedService = detectServiceFromPlan(selectedPlan);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Failed to submit");
+
+      toast.success("Thank you for reaching out!", {
+        description: "We'll get back to you within 24 hours.",
+      });
+      handleClose(false);
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -72,39 +101,7 @@ const ContactFormDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          action="https://formsubmit.co/info@globify.in"
-          method="POST"
-          className="flex flex-col gap-4 mt-2"
-        >
-          <input
-            type="hidden"
-            name="_next"
-            ref={(node) => {
-              if (node && typeof window !== "undefined")
-                node.value = window.location.origin + "/thank-you";
-            }}
-          />
-          <input
-            type="hidden"
-            name="_autoresponse"
-            value="Thank you for reaching out to Globify. We have received your query and our team will get back to you within 24 hours."
-          />
-          <input type="hidden" name="_captcha" value="false" />
-          <input
-            type="hidden"
-            name="_subject"
-            value="New Lead: Contact Us - globify.in"
-          />
-          <input
-            type="text"
-            id="_phone_extension"
-            name="_phone_extension"
-            className="absolute left-[-9999px]"
-            tabIndex={-1}
-            autoComplete="off"
-            aria-hidden="true"
-          />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-hero-foreground/70 text-sm">
@@ -249,10 +246,20 @@ const ContactFormDialog = ({
           </div>
           <Button
             type="submit"
+            disabled={isSubmitting}
             className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full mt-1 gap-2"
           >
-            Send Message
-            <Send className="w-4 h-4" />
+            {isSubmitting ? (
+              <>
+                Sending...
+                <Loader2 className="w-4 h-4 animate-spin" />
+              </>
+            ) : (
+              <>
+                Send Message
+                <Send className="w-4 h-4" />
+              </>
+            )}
           </Button>
         </form>
       </DialogContent>

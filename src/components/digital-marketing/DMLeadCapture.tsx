@@ -1,9 +1,34 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Send } from "lucide-react";
+import { CheckCircle2, Send, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const DMLeadCapture = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formData = new FormData(e.currentTarget);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error("Failed to submit");
+      toast.success("Audit Requested!", {
+        description: "We'll get back to you within 24 hours.",
+      });
+      (e.target as HTMLFormElement).reset();
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="lead-capture" className="py-16 sm:py-24 bg-hero">
       <div className="container mx-auto px-5 sm:px-6">
@@ -73,29 +98,9 @@ const DMLeadCapture = () => {
             transition={{ delay: 0.1 }}
           >
             <form
-              action="https://formsubmit.co/info@globify.in"
-              method="POST"
+              onSubmit={handleSubmit}
               className="p-6 sm:p-8 rounded-2xl border border-hero-foreground/[0.06] bg-hero-foreground/[0.02] space-y-5"
             >
-              <input
-                type="hidden"
-                name="_next"
-                ref={(node) => {
-                  if (node && typeof window !== "undefined")
-                    node.value = window.location.origin + "/thank-you";
-                }}
-              />
-              <input
-                type="hidden"
-                name="_autoresponse"
-                value="Thank you for reaching out to Globify. We have received your query and our team will get back to you within 24 hours."
-              />
-              <input type="hidden" name="_captcha" value="false" />
-              <input
-                type="hidden"
-                name="_subject"
-                value="New Lead: Digital Marketing Audit - globify.in"
-              />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-semibold text-hero-foreground/60 mb-1.5 block">
@@ -207,12 +212,21 @@ const DMLeadCapture = () => {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-full font-semibold text-sm hover:bg-primary/90 transition-all"
               >
-                <Send className="w-4 h-4" /> Get Your Free Growth Audit
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" /> Get Your Free Growth Audit
+                  </>
+                )}
               </button>
 
-              <p className="text-sm text-hero-foreground/30 text-center">
+              <p className="text-sm text-hero-foreground/30 text-center mt-3">
                 By submitting, you agree to our Privacy Policy. We'll respond
                 within 24 hours.
               </p>
