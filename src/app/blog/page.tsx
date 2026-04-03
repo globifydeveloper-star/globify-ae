@@ -2,9 +2,17 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from 'next/link';
+import Link from "next/link";
 
-import { ArrowRight, Search, Calendar, Clock, TrendingUp, BookOpen, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Search,
+  Calendar,
+  Clock,
+  TrendingUp,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -12,14 +20,17 @@ import { blogPosts, blogCategories, type BlogCategory } from "@/data/blogData";
 import { useContactDialog } from "@/contexts/ContactDialogContext";
 
 const Blog = () => {
-  const [activeCategory, setActiveCategory] = useState<BlogCategory | "All">("All");
+  const [activeCategory, setActiveCategory] = useState<BlogCategory | "All">(
+    "All",
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(9);
   const { openContactDialog } = useContactDialog();
 
   const filteredPosts = useMemo(() => {
     return blogPosts.filter((post) => {
-      const matchesCategory = activeCategory === "All" || post.category === activeCategory;
+      const matchesCategory =
+        activeCategory === "All" || post.category === activeCategory;
       const matchesSearch =
         searchQuery === "" ||
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -40,7 +51,6 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      
       <Navbar />
 
       {/* Hero Section */}
@@ -64,7 +74,9 @@ const Blog = () => {
               <span className="text-primary">Insights & Trends</span>
             </h1>
             <p className="text-lg text-hero-foreground/60 leading-relaxed max-w-2xl mx-auto mb-8">
-              Expert perspectives on e-commerce, technology, and digital growth strategies for businesses in the UAE and India. Data-driven, actionable, and built for decision-makers.
+              Expert perspective on e-commerce, technology, and digital growth
+              strategies for businesses in the UAE and India. Data-driven,
+              actionable, and built for decision-makers.
             </p>
             <div className="relative max-w-md mx-auto">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-hero-foreground/30" />
@@ -117,7 +129,9 @@ const Blog = () => {
           <div className="container mx-auto px-6">
             <div className="flex items-center gap-2 mb-10">
               <Sparkles className="w-5 h-5 text-primary" />
-              <h2 className="text-2xl font-semibold text-foreground">Featured Insights</h2>
+              <h2 className="text-2xl font-semibold text-foreground">
+                Featured Insights
+              </h2>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredPosts.map((post, i) => (
@@ -151,7 +165,11 @@ const Blog = () => {
                         <div className="flex items-center gap-3 text-sm text-foreground/40">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5" />
-                            {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            {new Date(post.date).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5" />
@@ -170,21 +188,32 @@ const Blog = () => {
       )}
 
       {/* Latest / Filtered Insights */}
-      <section className={`py-20 ${activeCategory === "All" && searchQuery === "" ? "section-dark" : "bg-background"}`}>
+      <section
+        className={`py-20 ${activeCategory === "All" && searchQuery === "" ? "section-dark" : "bg-background"}`}
+      >
         <div className="container mx-auto px-6">
           <div className="flex items-center gap-2 mb-10">
             <BookOpen className="w-5 h-5 text-primary" />
-            <h2 className={`text-2xl font-semibold ${activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground" : "text-foreground"}`}>
-              {activeCategory === "All" ? "Latest Insights" : `${activeCategory} Insights`}
+            <h2
+              className={`text-2xl font-semibold ${activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground" : "text-foreground"}`}
+            >
+              {activeCategory === "All"
+                ? "Latest Insights"
+                : `${activeCategory} Insights`}
             </h2>
-            <span className={`ml-2 text-sm ${activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground/40" : "text-foreground/40"}`}>
-              ({filteredPosts.length} {filteredPosts.length === 1 ? "article" : "articles"})
+            <span
+              className={`ml-2 text-sm ${activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground/40" : "text-foreground/40"}`}
+            >
+              ({filteredPosts.length}{" "}
+              {filteredPosts.length === 1 ? "article" : "articles"})
             </span>
           </div>
 
           {filteredPosts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-foreground/40 text-lg">No articles found matching your criteria.</p>
+              <p className="text-foreground/40 text-lg">
+                No articles found matching your criteria.
+              </p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -201,31 +230,49 @@ const Blog = () => {
                       href={`/blog/${post.slug}`}
                       className="group block h-full"
                     >
-                      <div className={`h-full rounded-2xl border p-6 transition-all hover:shadow-lg ${
-                        activeCategory === "All" && searchQuery === ""
-                          ? "border-section-dark-foreground/[0.06] hover:border-primary/20 bg-section-dark-foreground/[0.03]"
-                          : "border-border hover:border-primary/30 bg-card"
-                      }`}>
+                      <div
+                        className={`h-full rounded-2xl border p-6 transition-all hover:shadow-lg ${
+                          activeCategory === "All" && searchQuery === ""
+                            ? "border-section-dark-foreground/[0.06] hover:border-primary/20 bg-section-dark-foreground/[0.03]"
+                            : "border-border hover:border-primary/30 bg-card"
+                        }`}
+                      >
                         <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-4">
                           {post.category}
                         </span>
-                        <h3 className={`text-lg font-semibold group-hover:text-primary transition-colors leading-snug mb-3 ${
-                          activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground" : "text-foreground"
-                        }`}>
+                        <h3
+                          className={`text-lg font-semibold group-hover:text-primary transition-colors leading-snug mb-3 ${
+                            activeCategory === "All" && searchQuery === ""
+                              ? "text-section-dark-foreground"
+                              : "text-foreground"
+                          }`}
+                        >
                           {post.title}
                         </h3>
-                        <p className={`text-sm leading-relaxed mb-4 line-clamp-3 ${
-                          activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground/50" : "text-foreground/50"
-                        }`}>
+                        <p
+                          className={`text-sm leading-relaxed mb-4 line-clamp-3 ${
+                            activeCategory === "All" && searchQuery === ""
+                              ? "text-section-dark-foreground/50"
+                              : "text-foreground/50"
+                          }`}
+                        >
                           {post.excerpt}
                         </p>
                         <div className="flex items-center justify-between mt-auto">
-                          <div className={`flex items-center gap-3 text-sm ${
-                            activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground/30" : "text-foreground/40"
-                          }`}>
+                          <div
+                            className={`flex items-center gap-3 text-sm ${
+                              activeCategory === "All" && searchQuery === ""
+                                ? "text-section-dark-foreground/30"
+                                : "text-foreground/40"
+                            }`}
+                          >
                             <span className="flex items-center gap-1">
                               <Calendar className="w-3.5 h-3.5" />
-                              {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                              {new Date(post.date).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="w-3.5 h-3.5" />
@@ -245,7 +292,9 @@ const Blog = () => {
           {/* Load More + Count */}
           {filteredPosts.length > 0 && (
             <div className="flex flex-col items-center gap-4 mt-12">
-              <p className={`text-sm ${activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground/40" : "text-foreground/40"}`}>
+              <p
+                className={`text-sm ${activeCategory === "All" && searchQuery === "" ? "text-section-dark-foreground/40" : "text-foreground/40"}`}
+              >
                 Showing {latestPosts.length} of {filteredPosts.length} articles
               </p>
               {hasMore && (
@@ -274,7 +323,9 @@ const Blog = () => {
               Turn Insights Into <span className="text-primary">Action</span>
             </h2>
             <p className="text-lg text-foreground/50 leading-relaxed mb-10 max-w-2xl mx-auto">
-              Our team of digital commerce experts helps businesses in the UAE and India implement strategies that drive measurable growth. Let's discuss your goals.
+              Our team of digital commerce experts helps businesses in the UAE
+              and India implement strategies that drive measurable growth. Let's
+              discuss your goals.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
